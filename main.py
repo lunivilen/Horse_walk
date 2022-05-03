@@ -57,7 +57,7 @@ class UiMainWindow(object):
         self.timer.setStyleSheet("font: 18pt \"Diary of an 8-bit mage\";\n"
                                  "text-align: \"center\"")
         self.timer.setObjectName("timer")
-        self.timer.setText("2")
+        self.timer.setText("10")
         self.place_horse = QtWidgets.QTextEdit(self.centralwidget)
         self.place_horse.setGeometry(QtCore.QRect(270, 390, 191, 41))
         font = QtGui.QFont()
@@ -77,30 +77,37 @@ class UiMainWindow(object):
         main_window.setWindowTitle(_translate("main_window", "Chess"))
 
     def click(self):
-        if 1 > int(self.timer.toPlainText()):
+        try:
+            if 1 > int(self.timer.toPlainText()):
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setWindowTitle("Неверное значение")
+                msg.setText("Время игры должно быть положительным")
+                button = msg.exec()
+            elif int(self.field_size.toPlainText()) < 6:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setWindowTitle("Неверное значение")
+                msg.setText("Размер поля должен быть больше или равен 6")
+                button = msg.exec()
+            elif not (0 < int(self.place_horse.toPlainText()) <= int(self.field_size.toPlainText()) ** 2):
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setWindowTitle("Неверное значение")
+                msg.setText(
+                    "Положение коня должно быть в диапазоне от 1 до " + str(int(self.field_size.toPlainText()) ** 2))
+                button = msg.exec()
+            else:
+                main_window.hide()
+                board(int(self.field_size.toPlainText()), int(self.place_horse.toPlainText()),
+                      int(self.timer.toPlainText()))
+                main_window.show()
+        except ValueError:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle("Неверное значение")
-            msg.setText("Время игры должно быть положительным")
+            msg.setText("Во всех полях могут быть только целые положительные числа")
             button = msg.exec()
-        elif int(self.field_size.toPlainText()) < 6:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle("Неверное значение")
-            msg.setText("Размер поля должен быть больше или равен 6")
-            button = msg.exec()
-        elif not (0 < int(self.place_horse.toPlainText()) < int(self.field_size.toPlainText()) ** 2):
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle("Неверное значение")
-            msg.setText(
-                "Положение коня должно быть\nв диапазоне от 1 до " + str(int(self.field_size.toPlainText()) ** 2))
-            button = msg.exec()
-        else:
-            main_window.hide()
-            board(int(self.field_size.toPlainText()), int(self.place_horse.toPlainText()),
-                  int(self.timer.toPlainText()))
-            main_window.show()
 
 
 if __name__ == "__main__":

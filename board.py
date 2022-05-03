@@ -37,7 +37,7 @@ def board(field_size, place_horse, timer):
                 y += size
 
         if g == len(mas):
-            pygame.time.delay(3000)
+            pygame.time.delay(2000)
             pygame.display.quit()
             break
         else:
